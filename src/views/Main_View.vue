@@ -8,10 +8,14 @@
             <v-container class="py-0 fill-height">
                 <v-avatar
                 class="mr-10"
-                color="green darken-1"
-                size="40"
+                size="45"
                 >
-                    <span class="white--text text-h7">HSE</span>
+                    <img
+                    elevation="20"
+                    src="K3.png"
+                    height="50"
+                    >
+                    <!-- <span class="white--text text-h7">HSE</span> -->
                 </v-avatar>
                 <v-btn v-for="link in links" :key="link.view" @click="linked(link.path)" text>{{ link.view }}</v-btn>
                 <v-spacer></v-spacer>
@@ -34,7 +38,8 @@
         data: () => ({
             links: [
                 {path:'/accesshome',view:'Home'},
-                {path:'/program/activity', view:'Work Program'},
+                {path:'/activity', view:'Work Program'},
+                {path:'/present', view:'Presentation'},
                 {path:'/user', view:'User Administrator'},
             ],
         }),

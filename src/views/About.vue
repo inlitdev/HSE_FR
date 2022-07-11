@@ -24,10 +24,10 @@
                 </v-list-item>
                 <v-card-text>
                     <v-text-field
-                        label="Username"
+                        label="Email"
                         dense
                         v-model="username"
-                        prepend-icon="mdi-account"
+                        prepend-icon="mdi-email"
                     ></v-text-field>
                     <v-text-field
                         :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -62,7 +62,7 @@
                                 color="warning"
                                 dark
                                 small
-                                @click="link({path:'/'})"
+                                @click="link({path:'/home'})"
                             >
                                 <v-icon small left>mdi-subdirectory-arrow-left</v-icon> Back
                             </v-btn>
@@ -76,28 +76,114 @@
                 </v-card-subtitle>
             </v-container>
         </v-card>
+        <v-row justify="center">
+            <v-snackbar
+            v-model="snackbar"
+            :timeout="timeout"
+            top
+            right
+            :color="Messages.color"
+            outlined
+            absolute
+            > <v-icon :color="Messages.color" left small>{{Messages.icon}}</v-icon> {{Messages.statment}}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    text
+                    fab
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                    small
+                    >
+                    <v-icon :color="Messages.color">mdi-close</v-icon>
+                    </v-btn>
+                </template>
+            </v-snackbar>
+        </v-row>
     </v-container>
 </template>
 <script>
+    import Api from '@/api/api';
     export default {
         data () {
             return {
+                snackbar:false,
+                timeout:3000,
                 show2: false,
                 username:'',
-                password:''
+                password:'',
+                Messages : {
+                    color: '',
+                    icon: '',
+                    statment: ''
+                },
+                loggedIn: localStorage.getItem('loggedIn'),
+                token: localStorage.getItem('usertoken'),
             }
         },
         methods:{
             submit(){
                 const data = {
-                    username: this.username,
+                    email: this.username,
                     password: this.password
                 }
-                this.$router.push({path:'/accesshome'});
+                Api.AuthService().signIn(data).then(data => {
+                    console.log(data);
+                    if (data.code == 200) {
+                        localStorage.setItem('user', JSON.stringify(data.data.user));
+                        localStorage.setItem('usertoken', data.data.accessToken);
+                        localStorage.setItem('loggedIn', 'true');
+                        localStorage.setItem('roles', data.data.user.role);
+                        this.loggedIn = true;
+                        if (localStorage.getItem('usertoken') != null) {
+                            if (this.$route.params.nextUrl != null) {
+                                this.$router.push(this.$route.params);
+                            } else {
+                                this.snackbar = true;
+                                this.Messages.color = 'success';
+                                this.Messages.icon = 'fas fa-check';
+                                this.Messages.statment = 'Login sebagai user berhasil. !';
+                                this.$router.push({path: '/accesshome'});
+                                // console.log(localStorage.getItem('user'));
+                                // console.log(localStorage.getItem('usertoken'));
+                                // console.log(localStorage.getItem('roles'));
+                            }
+                        } else {
+                            this.$router.push({path: '/signin'});
+                        }
+                    } else if (data.code == 505) {
+                        this.snackbar = true;
+                        this.Messages.color = 'warning';
+                        this.Messages.icon = 'fas fa-exclamation-triangle';
+                        this.Messages.statment = 'Password anda salah. !';
+                        this.forms.password = '';
+                        this.$router.push({path: '/signin'});
+                    } else {
+                        this.snackbar = true;
+                        this.Messages.color = 'warning';
+                        this.Messages.icon = 'fas fa-exclamation-triangle';
+                        this.Messages.statment = 'Akun anda tidak terdaftar. !';
+                        this.forms.username = '';
+                        this.forms.password = '';
+                        this.$router.push({path: '/signin'});
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.snackbar = true;
+                    this.Messages.color = 'error';
+                    this.Messages.icon = 'fas fa-info';
+                    this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                });
+                // this.$router.push({path:'/accesshome'});
                 console.log(data);
             },
             link(test){
                 this.$router.push(test);
+            }
+        },
+        mounted()
+        {
+            if (this.loggedIn) {
+                return this.$router.push({ path: '/accesshome' })
             }
         }
     }
