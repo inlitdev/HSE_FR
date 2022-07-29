@@ -59,13 +59,24 @@
             </v-col>
             <v-col cols="12" md="3" sm="3"></v-col>
         </v-row>
-        <v-row align="center" justify="center" style="margin-top:100px;">
-            <v-col cols="12" md="12" sm="3" class="text-center">
-                <v-divider class="mb-3"></v-divider>
-                <h4>PT. Industri Nabati Lestari</h4>
-                <span style="font-size:14px;">HSE - Copyright &copy; <strong>IT.INL</strong> 2022</span>
-            </v-col>
-        </v-row>
+        <v-footer
+        fixed
+        padless
+        >
+            <v-card
+            flat
+            tile
+            width="100%"
+            class="green darken-1 text-center"
+            >
+                <v-divider></v-divider>
+
+                <v-card-text class="white--text">
+                    <h4>PT. Industri Nabati Lestari</h4>
+                    <span style="font-size:14px;">HSE - Copyright &copy; <strong>IT.INL</strong> 2022</span>
+                </v-card-text>
+            </v-card>
+        </v-footer>
     </v-container>
 </template>
 

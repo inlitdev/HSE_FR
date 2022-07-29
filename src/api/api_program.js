@@ -22,5 +22,13 @@ class ProgramService {
     getAllSchedule(){
         return http.get('api/schedule');
     }
-
+    getScheduleByID(id){
+        return http.get('api/schedule/'+id);
+    }
+    postDataSchedule(data){
+        return http.post('api/schedule',data);
+    }
+    updateDataSchedule(id, data){
+        return http.put('api/schedule/'+id,data);
+    } 
 } export default new ProgramService();

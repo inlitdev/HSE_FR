@@ -1,30 +1,13 @@
 <template>
     <v-container>
-        <v-row align="center" justify="center">
-            <v-col cols="12">
-                <v-sheet
-                min-height="10vh"
-                rounded="lg"
-                >
-                    <v-container fluid>
-                        <v-row align="center" justify="center">
-                            <v-col cols="6">
-                                <h3 class="text-h5">PRESENTATION HSE<v-icon right>mdi-image-area</v-icon></h3>
-                                <span style="color:green;">Utamakan Keselamatan & Kesehatan Kerja</span>
-                            </v-col>
-                            <v-col cols="6" class="text-right">
-                                <!-- <img
-                                elevation="20"
-                                src="K3.png"
-                                height="50"
-                                > -->
-                                <v-btn small color="primary" @click="addImage">New Item</v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-sheet>
+        <v-row>
+            <v-col cols="6">
+                <h3 class="text-h5"><v-icon left>mdi-image-multiple</v-icon>Image Slides</h3>
             </v-col>
-            <v-col cols="3" style="background-color:#EEEEEE;"
+            <v-col cols="6" class="text-right">
+                <v-btn small color="primary" @click="addImage">New Item</v-btn>
+            </v-col>
+            <v-col cols="3"
             v-for="(item) in items"
             :key="item.src">
                 <v-sheet
@@ -44,7 +27,7 @@
                         <v-divider></v-divider>
                         <v-btn icon v-show="item.status == 1"><v-icon title="Inactive" color="warning" @click="unpublishImage(item)">mdi-close-thick</v-icon></v-btn>
                         <v-btn icon v-show="item.status == 0"><v-icon title="Active" color="success" @click="publishImage(item)">mdi-check-bold</v-icon></v-btn>
-                        <v-btn icon><v-icon title="Delete" color="red" @click="deleteImage(item.name)">mdi-delete</v-icon></v-btn>
+                        <v-btn icon><v-icon title="Delete" color="red" @click="deleteImage(item)">mdi-delete</v-icon></v-btn>
                     </v-container>
                 </v-sheet>
             </v-col>
@@ -229,7 +212,9 @@
                 this.title = 'Delete Image';
                 this.statment = 'Do you want to delete it?';
                 this.typeSubmit = 'delete';
-                this.file = items;
+                console.log(items);
+                this.published.id = items.id;
+                // this.file = items;
             },
             publishImage(items){
                 this.dialog = true;
@@ -279,7 +264,29 @@
                         this.dialog = false;
                     });
                 } else if (this.typeSubmit == 'delete') {
-                    console.log(this.file)
+                    PictureService.deletePicture(this.published.id).then((res) => {
+                        if (res.data.code == 200) {
+                            this.loadGambar();
+                            this.snackbar = true;
+                            this.Messages.color = 'success';
+                            this.Messages.icon = 'fas fa-check';
+                            this.Messages.statment = 'Data berhasil dihapus !';
+                        } else {
+                            this.loadGambar();
+                            this.snackbar = true;
+                            this.Messages.color = 'warning';
+                            this.Messages.icon = 'fas fa-exclamation-triangle';
+                            this.Messages.statment = 'Proses gagal !';
+                        }
+                        this.dialog = false;
+                    }).catch((err) => {
+                        console.log(err);
+                        this.snackbar = true;
+                        this.Messages.color = 'error';
+                        this.Messages.icon = 'fas fa-info';
+                        this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                        this.dialog = false;
+                    });
                     console.log('Hapus');
                     this.dialog = false;
                 } else if (this.typeSubmit == 'publish') {

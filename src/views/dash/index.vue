@@ -8,15 +8,15 @@
 </style>
 <template>
     <v-container fluid>
-        <v-row>
-            <v-col cols="12" md="3" sm="3" class="text-center">
+        <!-- <v-row>
+            <v-col cols="3" class="text-center">
                 <v-container>
                     <strong class="text-h4">HSE DASHBOARD</strong>
                 </v-container>
             </v-col>
-            <v-col cols="12" md="6" sm="3" class="text-center">
+            <v-col cols="6" class="text-center">
             </v-col>
-            <v-col cols="12" md="3" sm="3">
+            <v-col cols="3">
                 <v-container class="text-right">
                     <img
                     elevation="20"
@@ -37,73 +37,191 @@
                     >
                 </v-container>
             </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" md="3" sm="3">
-                <v-row align="center" justify="center">
-                    <v-col cols="12" md="12" sm="3">
-                        <!-- <v-sheet rounded="lg"> -->
-                            <v-container fluid class="text-center">
-                                <!-- <Blink> -->
-                                    <img
-                                    elevation="20"
-                                    src="K3.png"
-                                    height="120"
-                                    >
-                                    <br>
-                                    <strong style="font-size:14px; color:#43A047;">UTAMAKAN</strong><br>
-                                    <strong style="font-size:14px; color:#43A047;">KESELAMATAN & KESEHATAN KERJA</strong>
-                                <!-- </Blink> -->
-                            </v-container>
-                        <!-- </v-sheet> -->
-                    </v-col>
-                    <v-col cols="12" md="12" sm="3">
-                        <!-- <v-sheet rounded="lg"> -->
-                            <v-container fluid class="text-center">
-                                <img
-                                src="helpro.png"
-                                height="520"
-                                class="blink"
-                                >
-                            </v-container>
-                        <!-- </v-sheet> -->
-                    </v-col>
-                    <v-col cols="12" md="12" sm="3" class="text-center">
-                        <h2 class="text-h4">{{dateTanggal.tanggal}} {{dateTanggal.bulan}} {{dateTanggal.tahun}}</h2>
-                        <h2 class="text-h5">{{dateTime.hours}}:{{ dateTime.minutes }}:{{ dateTime.seconds }}</h2>
-                    </v-col>
-                </v-row>
+        </v-row> -->
+        <v-row justify="center">
+            <v-col cols="3" class="mt-10">
+                <v-sheet
+                rounded="lg"
+                >
+                    <v-container fluid>
+                        <v-row align="center" justify="center">
+                            <v-col cols="12" md="12" sm="3" class="rounded-t-lg" style="background-color:#FFF9C4;">
+                                <!-- <v-sheet rounded="lg"> -->
+                                    <v-container fluid class="text-center">
+                                        <!-- <Blink> -->
+                                            <img
+                                            elevation="20"
+                                            src="K3.png"
+                                            height="120"
+                                            >
+                                            <br>
+                                            <strong style="font-size:14px; color:#43A047;">UTAMAKAN</strong><br>
+                                            <!-- <strong style="font-size:14px; color:#43A047;">UTAMAKAN</strong><br> -->
+                                            <strong style="font-size:14px; color:#43A047;">KESELAMATAN & KESEHATAN KERJA</strong>
+                                        <!-- </Blink> -->
+                                    </v-container>
+                                <!-- </v-sheet> -->
+                            </v-col>
+                            <v-col cols="12" md="12" sm="3" style="background-color:#FFEE58;">
+                                <!-- <v-sheet rounded="lg"> -->
+                                    <v-container fluid class="text-center">
+                                        <img
+                                        src="helpro.png"
+                                        height="520"
+                                        class="blink"
+                                        >
+                                    </v-container>
+                                <!-- </v-sheet> -->
+                            </v-col>
+                            <v-col cols="12" md="12" sm="3" class="text-center rounded-b-lg" style="color:white; background-color:black;">
+                                <h2 class="text-h4">{{dateTanggal.tanggal}} {{dateTanggal.bulan}} {{dateTanggal.tahun}}</h2>
+                                <h2 class="text-h5">{{dateTime.hours}}:{{ dateTime.minutes }}:{{ dateTime.seconds }}</h2>
+                                <!-- <v-btn icon color="teal"><v-icon x-large>mdi-home</v-icon></v-btn> -->
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-sheet>
             </v-col>
-            <v-col cols="12" md="9" sm="3">
-                <v-row>
-                    <v-col cols="12" md="6" sm="3">
+            <v-col cols="5" >
+                <v-row align="center" justify="center">
+                    <v-col cols="6">
+                            <img
+                            elevation="20"
+                            src="inl.png"
+                            height="40"
+                            class="mr-4"
+                            >
+                        <!-- <v-container fluid>
+                        </v-container> -->
+                    </v-col>
+                    <v-col cols="6" class="text-right">
+                            <img
+                            elevation="20"
+                            src="bumn.png"
+                            height="30"
+                            >
+                        <!-- <v-container fluid>
+                        </v-container> -->
+                    </v-col>
+                    <v-col cols="12">
                         <v-sheet
                         rounded="lg"
                         >
-                            <v-container fluid>
-                                <Bar
-                                    :chart-options="chartOptions"
-                                    :chart-data="chartData"
-                                    :chart-id="chartId"
-                                    :dataset-id-key="datasetIdKey"
-                                    :plugins="plugins"
-                                    :css-classes="cssClasses"
-                                    :styles="styles"
-                                    :width="width"
-                                    :height="height"
-                                />
+                            <v-container fluid class="text-center">
+                                <h3 class="mb-3 text-h5">INFORMASI KESELAMATAN KERJA</h3>
+                                <v-row class="text-left">
+                                    <v-col cols="6">
+                                        <v-sheet
+                                        rounded="lg"
+                                        color="teal darken-4"
+                                        dark
+                                        >
+                                            <v-container fluid>
+                                                <v-row align="center">
+                                                    <v-col cols="2">
+                                                        <v-icon large>mdi-clipboard-text-clock</v-icon>
+                                                    </v-col>
+                                                    <v-col cols="7" style="font-size:14px;">
+                                                        <span>TOTAL WORKING DAYS</span><br>
+                                                        <v-divider></v-divider>
+                                                        <span>Jumlah Hari Kerja</span>
+                                                    </v-col>
+                                                    <v-col cols="3" class="text-right">
+                                                        <strong class="text-h5">{{performance.work_days}}</strong>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-sheet>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-sheet
+                                        rounded="lg"
+                                        color="cyan darken-3"
+                                        dark
+                                        >
+                                            <v-container fluid>
+                                                <v-row align="center">
+                                                    <v-col cols="2">
+                                                        <v-icon large>mdi-medical-bag</v-icon>
+                                                    </v-col>
+                                                    <v-col cols="7" style="font-size:14px;">
+                                                        <span>TOTAL SAFE WORKED DAYS</span><br>
+                                                        <v-divider dark></v-divider>
+                                                        <span>Jumlah Hari Kerja Selamat</span>
+                                                    </v-col>
+                                                    <v-col cols="3" class="text-right">
+                                                        <strong class="text-h5">{{performance.safe_work}}</strong>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-sheet>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-sheet
+                                        rounded="lg"
+                                        color="orange darken-3"
+                                        dark
+                                        >
+                                            <v-container fluid>
+                                                <v-row align="center">
+                                                    <v-col cols="1">
+                                                        <v-icon large>mdi-briefcase-clock</v-icon>
+                                                    </v-col>
+                                                    <v-col cols="8" style="font-size:14px;">
+                                                        <span>TOTAL MANHOURS WORKED WITHOUT LOSE ACCIDENT</span><br>
+                                                        <v-divider></v-divider>
+                                                        <span>Total Jam Kerja Tanpa Kecelakaan</span>
+                                                    </v-col>
+                                                    <v-col cols="3" class="text-right">
+                                                        <strong class="text-h5">{{performance.manhours_worked}}</strong>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-sheet>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-sheet
+                                        rounded="lg"
+                                        color="red darken-4"
+                                        dark
+                                        >
+                                            <v-container fluid>
+                                                <v-row align="center" justify="center" class="mb-2">
+                                                    <v-col cols="2" class="text-center">
+                                                        <v-icon class="text-h1">mdi-skull</v-icon>
+                                                    </v-col>
+                                                    <v-col cols="10" class="text-right">
+                                                        <span>LAST ACCIDENT</span><br>
+                                                        <v-divider></v-divider>
+                                                        <span>Kecelakaan Terakhir</span>
+                                                        <v-system-bar height="2" color="white"></v-system-bar>
+                                                        <v-row align="center" justify="center" class="mt-2">
+                                                            <v-col cols="6" class="text-left">
+                                                                <span class="text-h7">2 Orang</span>
+                                                            </v-col>
+                                                            <v-col cols="6">
+                                                                <span class="text-h7">2022-10-11</span>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                                <span style="font-size:13px; color:#ECEFF1;"><v-icon left>mdi-message-text</v-icon> Kecelakaan terjadi saat mengendarai sepeda motor, dari Medan menuju Citayam. Korban tewas seketika di tempat kejadian perkara.</span>
+                                            </v-container>
+                                        </v-sheet>
+                                    </v-col>
+                                </v-row>
                             </v-container>
                         </v-sheet>
                     </v-col>
-                    <v-col cols="12" md="6" sm="3">
+                    <v-col cols="12">
                         <v-sheet
                         rounded="lg"
                         >
                             <v-container fluid>
-                                <v-carousel hide-delimiters show-arrows-on-hover cycle height="375">
+                                <v-carousel hide-delimiters show-arrows-on-hover cycle height="420">
                                     <v-carousel-item
-                                    v-for="(item,i) in items"
-                                    :key="i"
+                                    v-for="(item) in items"
+                                    :key="item.urutan"
                                     :src="item.src"
                                     reverse-transition="fade-transition"
                                     ></v-carousel-item>
@@ -111,7 +229,7 @@
                             </v-container>
                         </v-sheet>
                     </v-col>
-                    <v-col cols="12" md="12" sm="3">
+                    <!-- <v-col cols="12" md="12" sm="3">
                         <v-sheet
                         rounded="lg"
                         >
@@ -190,10 +308,46 @@
                                 </v-simple-table>
                             </v-container>
                         </v-sheet>
-                    </v-col>
+                    </v-col> -->
                 </v-row>
             </v-col>
-            <v-col cols="12" sm="3" md="12" class="text-center">
+            <v-col cols="4" class="text-center mt-10">
+                <v-sheet
+                rounded="lg"
+                >
+                    <v-container fluid>
+                        <strong class="text-h5 mb-4">Work Program Monthly</strong>
+                        <h3 class="text-h5 mb-4"><strong>HSE & P2K3L</strong></h3>
+                        <v-row>
+                            <v-col cols="12" class="text-center"
+                            v-for="(program,i) in programs"
+                            :key="i">
+                                <v-card
+                                :color=" i==0 ? 'pink darken-3': 'blue darken-3'"
+                                dark
+                                >
+                                    <v-card-title class="text-h5">{{program.aktifitas}}</v-card-title>
+                                    <v-card-subtitle class="text-left">
+                                        <v-row align="center">
+                                            <v-col cols="5">
+                                                <v-icon small left>mdi-google-maps</v-icon> {{program.area}}
+                                            </v-col>
+                                            <v-col cols="7">
+                                                <v-icon small left>mdi-calendar-clock</v-icon> {{program.tanggal}} <span class="ml-1 mr-1">|</span> {{program.time}}
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-subtitle>
+                                    <v-card-text style="color:white;">
+                                        Participant: <strong>{{program.pelaksana}}</strong>
+                                    </v-card-text>
+                                </v-card>
+                                <v-icon class="mt-3" large v-show="i != Number(programs.length)-1">mdi-arrow-down-bold</v-icon>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-sheet>
+            </v-col>
+            <v-col cols="12" class="text-center">
                 <span style="font-size:14px; color:#00796B;">Health, Security & Environment</span> <br>
                 <span style="font-size:11px;"><strong style="font-style: italic;">PT. Industri Nabati Lestari</strong> - Copyright &copy; IT.INL 2022</span>
             </v-col>
@@ -201,8 +355,9 @@
     </v-container>
 </template>
 <script>
-import { Bar } from 'vue-chartjs/legacy';
+// import { Bar } from 'vue-chartjs/legacy';
 // import Blink from 'vue-blink';
+import DashService from '@/api/api_dash';
 import moment from 'moment';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
@@ -211,7 +366,7 @@ const date = new Date();
 export default {
     name: 'BarChart',
     components: { 
-        Bar
+        // Bar
     },
     props: {
         chartId: {
@@ -290,17 +445,67 @@ export default {
                 }
             },
             items: [],
+            programs:[],
+            performance:{
+                work_days:300,
+                safe_work:300,
+                manhours_worked:0
+            }
         }
     },
     methods:{
         loadGambar(){
-            const data = [];
-            for (let i = 0; i < 14; i++) {
-                data[i] = {
-                    src: 'ppt/'+i+'.png'
+            // const data = [];
+            DashService.getAllSlide().then(res => {
+                if (res.data.code == 200) {
+                    const datas = res.data.slides2;
+                    // console.log(datas);
+                    const list = [];
+                    for (let i = 0; i < datas.length; i++) {
+                        list[i] = {
+                            src: datas[i].gambar,
+                            urutan: datas[i].urutan,
+                            status: datas[i].status,
+                        };
+                    }
+                    this.items = list;
+                } else {
+                    console.log('tidak ada data!');
                 }
-            }
-            this.items = data;
+            }).catch((err) => {
+                console.log(err);
+            });
+        },
+        workProgram(){
+            DashService.getAllPrograms().then(res => {
+                if (res.data.code == 200) {
+                    const datas = res.data.data;
+                    // console.log(datas);
+                    const list = [];
+                    var waktu;
+                    for (let i = 0; i < datas.length; i++) {
+                        if (datas[i].jam_selesai == '' || datas[i].jam_selesai == null) {
+                            
+                            waktu = moment(datas[i].jam_mulai,'hh:mm').format('hh:mm')+' WIB';
+                        } else {
+                            waktu = moment(datas[i].jam_mulai,'hh:mm').format('hh:mm')+' s/d '+ moment(datas[i].jam_selesai,'hh:mm').format('hh:mm')+' WIB';
+                        }
+                        list[i] = {
+                            tanggal: moment(datas[i].tanggal).format('dddd, DD-MM-YYYY'),
+                            area: datas[i].area,
+                            aktifitas: datas[i].aktifitas,
+                            pelaksana: datas[i].pelaksana,
+                            time: waktu,
+                        };
+                    }
+                    this.programs = list;
+                    console.log(this.programs);
+                } else {
+                    console.log('tidak ada data!');
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
         },
         setDateTime() {
             const date = new Date();
@@ -315,9 +520,21 @@ export default {
                 seconds: moment(date).format("ss"),
             };
         },
+        loadPerformance(){
+            const start = new Date(moment('01/01/'+new Date().getFullYear()).format('DD/MM/YYYY'));
+            const end = new Date();
+            const diff = (end - start)/1000;
+            const total = Math.floor(diff/(86400));
+            this.performance.work_days = total+1;
+            this.performance.safe_work = total+1;
+            this.performance.manhours_worked = (total*24)+(end.getHours()-start.getHours());
+            console.log((total*24)+(end.getHours()-start.getHours()));
+        }
     },
     created(){
         this.loadGambar()
+        this.workProgram()
+        this.loadPerformance()
     },
     beforeMount() {
         this.timer = setInterval(this.setDateTime, 1000);

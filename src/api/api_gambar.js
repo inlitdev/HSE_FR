@@ -16,6 +16,9 @@ class PictureService {
     uploadPicture(data){
         return http_multipart.post('api/slide/post/',data);
     }
+    deletePicture(data){
+        return http.post('api/slide/hapus/'+data);
+    }
 
     
 } export default new PictureService();

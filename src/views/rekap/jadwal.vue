@@ -125,6 +125,30 @@
                 </v-card>
             </v-dialog>
         </v-row>
+        
+        <!-- Notifikasi -->
+        <v-row justify="center">
+            <v-snackbar
+            v-model="snackbar"
+            :timeout="timeout"
+            top
+            right
+            :color="Messages.color"
+            outlined
+            absolute
+            > <v-icon :color="Messages.color" left small>{{Messages.icon}}</v-icon> {{Messages.statment}}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    text
+                    fab
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                    >
+                    <v-icon small>fas fa-close</v-icon>
+                    </v-btn>
+                </template>
+            </v-snackbar>
+        </v-row>
     </v-container>
 </template>
 <script>
@@ -160,6 +184,13 @@
             dialog1: false,
             required: '',
             typeSubmit: 'add',
+            Messages:{
+                icon:'',
+                statment:'',
+                color:''
+            },
+            snackbar: false,
+            timeout: 3000,
             items:[],
             schedule:{
                 id:'',
@@ -178,7 +209,7 @@
             },
             dataTable(){
                 this.headers = [
-                    {text: 'No',  value: 'no'},
+                    {text: 'ID',  value: 'no'},
                     {text: 'Activity', value: 'activity'}, 
                     {text: 'Area', value: 'area'},       
                     {text: 'Tanggal', value: 'tanggal'},
@@ -191,7 +222,7 @@
                         for (let i = 0; i < datas.length; i++) {
                             list[i] = {
                                 no: datas[i].id,
-                                activity: datas[i].id_activity,
+                                activity: datas[i].aktifitas,
                                 area: datas[i].area,
                                 tanggal: datas[i].tanggal,
                             };
@@ -204,17 +235,7 @@
                     console.log(err);
                 });
             },
-            AddAktivitas(){
-                this.dialog1 = true;
-                this.titles = 'Tambah Aktivitas';
-                this.required = '';
-                this.typeSubmit = 'add';
-                this.schedule = {
-                    id:'',
-                    activity:'',
-                    area:'',
-                    tanggal: this.today
-                };
+            programSchedule(){
                 ProgramService.getAllProgram().then(res => {
                     if (res.data.code == 200) {
                         const datas = res.data.data;
@@ -232,7 +253,56 @@
                 }).catch((err) => {
                     console.log(err);
                 });
+            },
+            AddAktivitas(){
+                this.dialog1 = true;
+                this.titles = 'Tambah Schedule';
+                this.required = '';
+                this.typeSubmit = 'add';
+                this.schedule = {
+                    id:'',
+                    activity:'',
+                    area:'',
+                    tanggal: this.today
+                };
+                this.programSchedule();
                 // this.formActive = Object.assign({}, this.schedule);
+            },
+            editItem(item){
+                ProgramService.getScheduleByID(item.no).then((res) => {
+                    if (res.data.code == 200) {
+                        this.programSchedule();
+                        const datas = res.data.data;
+                        this.schedule = {
+                            id:item.no,
+                            activity:datas.id_activity,
+                            area:datas.area,
+                            tanggal: datas.tanggal
+                        };
+                        this.dialog1 = true;
+                        this.titles = 'Edit Schedule';
+                        this.required = '';
+                        this.typeSubmit = 'edit';
+                    } else {
+                        this.schedule = {
+                            id:'',
+                            activity:'',
+                            area:'',
+                            tanggal: this.today
+                        };
+                        this.snackbar = true;
+                        this.Messages.color = 'warning';
+                        this.Messages.icon = 'fas fa-exclamation-triangle';
+                        this.Messages.statment = 'Proses gagal !';
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                    this.snackbar = true;
+                    this.Messages.color = 'error';
+                    this.Messages.icon = 'fas fa-info';
+                    this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                    this.dialog1 = false;
+                });
             },
             reset(){
                 this.schedule = {
@@ -245,7 +315,66 @@
             submit(){
                 if (this.typeSubmit == 'add') {
                     console.log("tambahkan");
-                    console.log(this.schedule);
+                    const data = {
+                        id_activity: this.schedule.activity.toString(),
+                        area: this.schedule.area,
+                        tanggal: this.schedule.tanggal
+                    };
+                    ProgramService.postDataSchedule(data).then((res) => {
+                        if (res.data.code == 200) {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'success';
+                            this.Messages.icon = 'fas fa-check';
+                            this.Messages.statment = 'Data berhasil ditambahkan !';
+                        } else {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'warning';
+                            this.Messages.icon = 'fas fa-exclamation-triangle';
+                            this.Messages.statment = 'Proses gagal !';
+                            // console.log('tidak ada data!');
+                        }
+                        this.dialog1 = false;
+                    }).catch((err) => {
+                        console.log(err);
+                        this.snackbar = true;
+                        this.Messages.color = 'error';
+                        this.Messages.icon = 'fas fa-info';
+                        this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                        this.dialog1 = false;
+                    });
+                } else if (this.typeSubmit == 'edit') {
+                    console.log("edit");
+                    const data = {
+                        id_activity: this.schedule.activity,
+                        area: this.schedule.area,
+                        tanggal: this.schedule.tanggal
+                    };
+                    ProgramService.updateDataSchedule(this.schedule.id,data).then((res) => {
+                        if (res.data.code == 200) {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'success';
+                            this.Messages.icon = 'fas fa-check';
+                            this.Messages.statment = 'Data berhasil diupdate !';
+                        } else {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'warning';
+                            this.Messages.icon = 'fas fa-exclamation-triangle';
+                            this.Messages.statment = 'Proses gagal !';
+                            // console.log('tidak ada data!');
+                        }
+                        this.dialog1 = false;
+                    }).catch((err) => {
+                        console.log(err);
+                        this.snackbar = true;
+                        this.Messages.color = 'error';
+                        this.Messages.icon = 'fas fa-info';
+                        this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                        this.dialog1 = false;
+                    });
                 } else {
                     console.log("Edit");
                 }

@@ -138,14 +138,26 @@
                             if (this.$route.params.nextUrl != null) {
                                 this.$router.push(this.$route.params);
                             } else {
-                                this.snackbar = true;
-                                this.Messages.color = 'success';
-                                this.Messages.icon = 'fas fa-check';
-                                this.Messages.statment = 'Login sebagai user berhasil. !';
-                                this.$router.push({path: '/accesshome'});
-                                // console.log(localStorage.getItem('user'));
-                                // console.log(localStorage.getItem('usertoken'));
-                                // console.log(localStorage.getItem('roles'));
+                                const uses = JSON.parse(localStorage.user);
+                                if (uses.role == 'admin') {
+                                    this.snackbar = true;
+                                    this.Messages.color = 'success';
+                                    this.Messages.icon = 'fas fa-check';
+                                    this.Messages.statment = 'Login sebagai user berhasil. !';
+                                    this.$router.push({path: '/accesshome'});
+                                } else if (uses.role == 'user') {
+                                    this.snackbar = true;
+                                    this.Messages.color = 'success';
+                                    this.Messages.icon = 'fas fa-check';
+                                    this.Messages.statment = 'Login sebagai user berhasil. !';
+                                    this.$router.push({path: '/homeuser'});
+                                } else {
+                                    this.snackbar = true;
+                                    this.Messages.color = 'success';
+                                    this.Messages.icon = 'fas fa-check';
+                                    this.Messages.statment = 'Login sebagai user berhasil. !';
+                                    this.$router.push({path: '/beranda'});
+                                }
                             }
                         } else {
                             this.$router.push({path: '/signin'});
@@ -182,8 +194,8 @@
         },
         mounted()
         {
-            if (this.loggedIn) {
-                return this.$router.push({ path: '/accesshome' })
+            if (!this.loggedIn) {
+                return this.$router.push({ path: '/signin' })
             }
         }
     }

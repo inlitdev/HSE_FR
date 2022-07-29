@@ -1,59 +1,63 @@
 <template>
     <v-container fluid>
-        <v-row align="center" justify="center">
-            <v-col cols="12" sm="3" md="6">
-                <h3 class="text-h6"><v-icon left>mdi-table</v-icon> Table Activity</h3>
-            </v-col>
-            <v-col cols="12" sm="3" md="3" class="text-right">
-                <v-btn small color="primary" fab @click="AddAktivitas">
-                    <v-icon>mdi-plus</v-icon>
-                </v-btn>
-            </v-col>
-            <v-col cols="12" sm="3" md="3">
-                <v-text-field
-                    label="Search..."
-                    prepend-inner-icon="mdi-magnify"
-                    v-model="search"
+        <v-card rounded="lg">
+            <v-container fluid>
+                <v-row align="center" justify="center">
+                    <v-col cols="12" sm="3" md="6">
+                        <h3 class="text-h6"><v-icon left>mdi-table</v-icon> Table Activity</h3>
+                    </v-col>
+                    <v-col cols="12" sm="3" md="3" class="text-right">
+                        <v-btn small color="primary" fab @click="AddAktivitas">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="12" sm="3" md="3">
+                        <v-text-field
+                            label="Search..."
+                            prepend-inner-icon="mdi-magnify"
+                            v-model="search"
+                            dense
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-divider class="mt-2 mb-2"></v-divider>
+                <v-data-table
+                    :headers="headers"
+                    :items="desserts"
+                    :search="search"
+                    class="mt-2"
                     dense
-                ></v-text-field>
-            </v-col>
-        </v-row>
-        <v-divider class="mt-2 mb-2"></v-divider>
-        <v-data-table
-            :headers="headers"
-            :items="desserts"
-            :search="search"
-            class="mt-2"
-            dense
-        >
-            <template v-slot:[`item.actions`]="{item}">
-                <v-menu
-                bottom
-                origin="center center"
-                transition="scale-transition"
                 >
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                        color="primary"
-                        dark
-                        v-bind="attrs"
-                        v-on="on"
-                        small
-                        outlined
-                        >Aksi <v-icon right>mdi-menu-down</v-icon></v-btn>
-                    </template>
+                    <template v-slot:[`item.actions`]="{item}">
+                        <v-menu
+                        bottom
+                        origin="center center"
+                        transition="scale-transition"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                color="primary"
+                                dark
+                                v-bind="attrs"
+                                v-on="on"
+                                small
+                                outlined
+                                >Aksi <v-icon right>mdi-menu-down</v-icon></v-btn>
+                            </template>
 
-                    <v-list>
-                        <v-list-item link @click="editItem(item)">
-                            <v-list-item-subtitle style="color:#F57F17;"><v-icon color="yellow darken-4" small left>mdi-pencil</v-icon> Edit</v-list-item-subtitle>
-                        </v-list-item>
-                        <v-list-item link @click="deleteItem(item)">
-                            <v-list-item-subtitle style="color:#AD1457;"><v-icon color="pink darken-3" small left>mdi-delete</v-icon> Delete</v-list-item-subtitle>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-            </template>
-        </v-data-table>
+                            <v-list>
+                                <v-list-item link @click="editItem(item)">
+                                    <v-list-item-subtitle style="color:#F57F17;"><v-icon color="yellow darken-4" small left>mdi-pencil</v-icon> Edit</v-list-item-subtitle>
+                                </v-list-item>
+                                <v-list-item link @click="deleteItem(item)">
+                                    <v-list-item-subtitle style="color:#AD1457;"><v-icon color="pink darken-3" small left>mdi-delete</v-icon> Delete</v-list-item-subtitle>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </template>
+                </v-data-table>
+            </v-container>
+        </v-card>
 
         <!-- Tambah Data Banding Dialog -->
         <v-row justify="center">
@@ -68,33 +72,6 @@
                         <v-container>
                             <strong v-show="required !=''" style="color:red;">{{required}}</strong>
                             <v-row align="center" justify="center">
-                                <!-- <v-col cols="12" sm="3" md="6">
-                                    <v-menu
-                                    v-model="menus4"
-                                    :close-on-content-click="false"
-                                    :nudge-right="40"
-                                    transition="scale-transition"
-                                    offset-y
-                                    min-width="auto"
-                                    >
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field
-                                            v-model="formInput.tanggal"
-                                            label="Tanggal"
-                                            prepend-icon="mdi-calendar"
-                                            readonly
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            ></v-text-field>
-                                        </template>
-                                        <v-date-picker
-                                        v-model="formInput.tanggal"
-                                        @input="menus4 = false"
-                                        color="cyan"
-                                        :max="today"
-                                        ></v-date-picker>
-                                    </v-menu>
-                                </v-col> -->
                                 <v-col cols="12" sm="3" md="6">
                                     <v-text-field
                                     v-model="formActive.activity"
@@ -103,13 +80,14 @@
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="3" md="6">
-                                    <v-text-field
-                                    v-model="formActive.action"
-                                    label="Action"
-                                    prepend-icon="mdi-human-dolly"
-                                    ></v-text-field>
+                                    <v-autocomplete
+                                        v-model="formActive.action"
+                                        :items="eksion"
+                                        prepend-icon="mdi-human-dolly"
+                                        label="Action"
+                                    ></v-autocomplete>
                                 </v-col>
-                                <v-col cols="12" sm="3" md="4">
+                                <v-col cols="12" sm="3" md="6">
                                     <label for="">Time</label>
                                     <v-row>
                                         <v-col cols="6">
@@ -128,15 +106,7 @@
                                         </v-col>
                                     </v-row>
                                 </v-col>
-                                <v-col cols="12" sm="3" md="4">
-                                    <v-text-field
-                                    v-model="formActive.location"
-                                    label="Location"
-                                    prepend-icon="mdi-comment-outline"
-                                    hint="Example: Area"
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="3" md="4">
+                                <v-col cols="12" sm="3" md="6">
                                     <v-text-field
                                     v-model="formActive.remark"
                                     label="Remarks"
@@ -278,6 +248,12 @@
             timeout: 3000,
             headers:[],
             desserts:[],
+            eksion: [
+                {value:'All Department',text:'All Department'},
+                {value:'HSE',text:'HSE'},
+                {value:'HSE & All Department',text:'HSE & All Department'},
+                {value:'Member P2K3L',text:'Member P2K3L'}
+            ],
             search:'',
             dialog: false,
             dialog1: false,
