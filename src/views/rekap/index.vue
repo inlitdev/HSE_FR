@@ -40,6 +40,11 @@
                         <v-divider class="my-2"></v-divider>
 
                         <v-subheader>Master</v-subheader>
+                        <v-list-item link @click="link({path:'/card'})">
+                            <v-list-item-content>
+                                <v-list-item-title><v-icon left>mdi-account-card</v-icon>Cards</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                         <v-list-item link @click="link({path:'/present'})">
                             <v-list-item-content>
                                 <v-list-item-title><v-icon left>mdi-image-multiple</v-icon>Presentation</v-list-item-title>

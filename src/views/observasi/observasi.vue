@@ -79,7 +79,7 @@
                     <v-card-text class="mt-3">
                         <v-container>
                             <strong v-show="required !=''" style="color:red;">{{required}}</strong>
-                            <v-row>
+                            <v-row align="center">
                                 <v-col cols="6">
                                     <v-menu
                                     v-model="menus"
@@ -119,19 +119,32 @@
                                     <v-autocomplete
                                     v-model="formInput.observasi"
                                     :items="list_observasi"
+                                    @input="loadKategoriByName"
                                     prepend-inner-icon="mdi-cloud-search"
                                     label="Kategori Observasi"
                                     ></v-autocomplete>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field
+                                    <v-textarea
+                                    label="Detail Kategori"
+                                    auto-grow
+                                    readonly
+                                    filled
+                                    rounded
+                                    v-model="detail_observation"
+                                    ></v-textarea>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-autocomplete
                                     v-model="formInput.lokasi"
                                     prepend-inner-icon="mdi-google-maps"
                                     label="Lokasi"
-                                    ></v-text-field>
+                                    :items="list_lokasi"
+                                    ></v-autocomplete>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-file-input
+                                    type="file"
                                     show-size
                                     counter
                                     multiple
@@ -218,6 +231,9 @@
 // Moment
 import moment from 'moment';
 
+// API Axios
+import ObservationService from '@/api/api_observasi';
+
 export default {
     data: () => ({
             user: JSON.parse(localStorage.user),
@@ -238,6 +254,8 @@ export default {
                 keterangan:'',
             },
             list_observasi:[],
+            list_lokasi:[],
+            detail_observation:'',
             menus:false,
             dialog:false,
             dialog1:false,
@@ -270,12 +288,25 @@ export default {
             addItem(){
                 this.typeSubmit = 'add';
                 this.dialog = true;
-                this.titles = 'Tambah Observasi'
+                this.titles = 'Tambah Observasi';
+                this.loadKategori();
+                this.loadLokasi();
+                this.formInput = {
+                    id:'',
+                    tanggal:moment(new Date).format('YYYY-MM-DD'),
+                    jam:moment(new Date).format('HH:mm:ss'),
+                    observasi:'',
+                    lokasi:'',
+                    file:[],
+                    keterangan:'',
+                };
             },
             editItem(){
                 this.typeSubmit = 'edit';
                 this.dialog = true;
-                this.titles = 'Edit Observasi'
+                this.titles = 'Edit Observasi';
+                this.loadKategori();
+                this.loadLokasi();
             },
             deleteItem(){
                 this.typeSubmit = 'delete';
@@ -292,11 +323,52 @@ export default {
             submit(){
                 this.typeSubmit == 'add'
                 if (this.typeSubmit == 'add') {
-                    const data =  {
-                        nama: this.formInput.observasi,
-                        keterangan: this.formInput.keterangan,
+                    let formData = new FormData();
+                    for (let i = 0; i < this.formInput.file.length; i++) {
+                        formData.append('foto_observations['+i+']', this.formInput.file[i]);
                     }
-                    console.log(data)
+                    formData.append('kategori_id', this.formInput.observasi);
+                    formData.append('jam_observations', this.formInput.jam);
+                    formData.append('tgl_observations', this.formInput.tanggal);
+                    formData.append('lokasi_id', this.formInput.lokasi);
+                    formData.append('user_id', this.user.id);
+                    formData.append('keterangan_observations', this.formInput.keterangan);
+                    // let data =  {
+                    //     kategori_id: this.formInput.observasi,
+                    //     keterangan_observations: this.formInput.keterangan,
+                    //     jam_observations: this.formInput.jam,
+                    //     tgl_observations: this.formInput.tanggal,
+                    //     lokasi_id: this.formInput.lokasi,
+                    //     user_id: this.user.id,
+                    // }
+                    // data = JSON.stringify(data)
+                    // formData.append('data', data);
+                    console.log(formData);
+
+                    ObservationService.PostObservation(formData).then((res) => {
+                        if (res.data.code == 200) {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'success';
+                            this.Messages.icon = 'fas fa-check';
+                            this.Messages.statment = 'Update data sukses !';
+                        } else {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'warning';
+                            this.Messages.icon = 'fas fa-exclamation-triangle';
+                            this.Messages.statment = 'Proses gagal !';
+                        }
+                        this.dialog = false;
+                    }).catch((err) => {
+                        console.log(err);
+                        this.snackbar = true;
+                        this.Messages.color = 'error';
+                        this.Messages.icon = 'fas fa-info';
+                        this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                        this.dialog = false;
+                    });
+                    this.dialog = false;
                 } else if (this.typeSubmit == 'edit') {
                     const data =  {
                         id: this.formInput.id,
@@ -310,6 +382,65 @@ export default {
             },
             link(test){
                 this.$router.push(test);
+            },
+
+            // Load Data
+            loadKategori(){
+                ObservationService.getAllCategories().then((res) => {
+                    const load = [];
+                    if (res.data.code == 200) {
+                        const datas = res.data.data;
+                        for (let i = 0; i < datas.length; i++) {
+                            load[i] = {
+                                value: datas[i].id,
+                                text: datas[i].nama_categories,
+                            }
+                        }
+                    } else {
+                        load[0] = {
+                            id: null,
+                            list: null,
+                        }
+                    }
+                    this.list_observasi = load;
+                }).catch((err) => {
+                    console.log(err);
+                });
+            },
+            loadKategoriByName(){
+                ObservationService.getCategoriesById(this.formInput.observasi).then((res) => {
+                    if (res.data.code == 200) {
+                        const datas = res.data.data;
+                        this.detail_observation = datas.keterangan_categories;
+                    } else {
+                        this.required = 'Tidak Ditemukan';
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                        this.required = 'Load Data Error';
+                });
+            },
+            loadLokasi(){
+                ObservationService.getAllLocation().then((res) => {
+                    const load = [];
+                    if (res.data.code == 200) {
+                        const datas = res.data.data;
+                        for (let i = 0; i < datas.length; i++) {
+                            load[i] = {
+                                value: datas[i].id,
+                                text: datas[i].nama_locations,
+                            }
+                        }
+                    } else {
+                        load[0] = {
+                            id: null,
+                            list: null,
+                        }
+                    }
+                    this.list_lokasi = load;
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
         },
         created(){

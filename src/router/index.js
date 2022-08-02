@@ -102,6 +102,15 @@ const routes = [
             }
           },
           {
+            path: '/card',
+            name: 'Card',
+            component: () => import(/* webpackChunkName: "about" */ '../views/kartu/index.vue'),
+            meta: {
+              requireAuth: true,
+              admin: true
+            }
+          },
+          {
             path: '/user',
             name: 'UserAdministrator',
             component: () => import(/* webpackChunkName: "about" */ '../views/user/index.vue'),
@@ -125,6 +134,15 @@ const routes = [
             path: '/schedules',
             name: 'Schedules',
             component: () => import(/* webpackChunkName: "about" */ '../views/rekap/jadwal.vue'),
+            meta: {
+              requireAuth: true,
+              user: true
+            }
+          },
+          {
+            path: '/cards',
+            name: 'Cards',
+            component: () => import(/* webpackChunkName: "about" */ '../views/kartu/index.vue'),
             meta: {
               requireAuth: true,
               user: true

@@ -184,6 +184,7 @@
             links_components_admin: [
                 {path:'/activity',view:'Activity', icon:'mdi-handball'},
                 {path:'/schedule', view:'Schedule', icon:'mdi-clock'},
+                {path:'/card', view:'Cards', icon:'mdi-account-card'},
                 {path:'/present', view:'Presentation', icon:'mdi-image-multiple'},
                 {path:'/user', view:'User Administrator', icon:'mdi-account'},
             ],
@@ -196,6 +197,7 @@
             // User Menu
             links_components_user: [
                 {path:'/activities',view:'Activity', icon:'mdi-handball'},
+                {path:'/cards', view:'Cards', icon:'mdi-account-card'},
                 {path:'/schedules', view:'Schedule', icon:'mdi-clock'},
                 {path:'/presents', view:'Presentation', icon:'mdi-image-multiple'},
             ],

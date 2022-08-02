@@ -20,5 +20,18 @@ class PictureService {
         return http.post('api/slide/hapus/'+data);
     }
 
+    // Cards
+    getTotal(data){
+        return http.get('api/admin/inputtotals/index/'+data);
+    }
+    postTotal(data){
+        return http.post('api/inputtotals',data);
+    }
+    getAccident(){
+        return http.get('api/lastaccidents');
+    }
+    postAccident(data){
+        return http.post('api/lastaccidents',data);
+    }
     
 } export default new PictureService();

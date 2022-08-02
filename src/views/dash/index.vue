@@ -197,15 +197,15 @@
                                                         <v-system-bar height="2" color="white"></v-system-bar>
                                                         <v-row align="center" justify="center" class="mt-2">
                                                             <v-col cols="6" class="text-left">
-                                                                <span class="text-h7">2 Orang</span>
+                                                                <span class="text-h7">{{last_acident.jml}} Orang</span>
                                                             </v-col>
                                                             <v-col cols="6">
-                                                                <span class="text-h7">2022-10-11</span>
+                                                                <span class="text-h7">{{last_acident.tgl}}</span>
                                                             </v-col>
                                                         </v-row>
                                                     </v-col>
                                                 </v-row>
-                                                <span style="font-size:13px; color:#ECEFF1;"><v-icon left>mdi-message-text</v-icon> Kecelakaan terjadi saat mengendarai sepeda motor, dari Medan menuju Citayam. Korban tewas seketika di tempat kejadian perkara.</span>
+                                                <span style="font-size:13px; color:#ECEFF1;"><v-icon left>mdi-message-text</v-icon> {{last_acident.ket}}</span>
                                             </v-container>
                                         </v-sheet>
                                     </v-col>
@@ -450,7 +450,12 @@ export default {
                 work_days:300,
                 safe_work:300,
                 manhours_worked:0
-            }
+            },
+            last_acident:{
+                tgl:moment(new Date).format('YYYY-MM-DD'),
+                jml:'0',
+                ket:'',
+            },
         }
     },
     methods:{
@@ -526,15 +531,68 @@ export default {
             const diff = (end - start)/1000;
             const total = Math.floor(diff/(86400));
             this.performance.work_days = total+1;
-            this.performance.safe_work = total+1;
-            this.performance.manhours_worked = (total*24)+(end.getHours()-start.getHours());
-            console.log((total*24)+(end.getHours()-start.getHours()));
+            // this.performance.safe_work = total+1;
+            // this.performance.manhours_worked = (total*24)+(end.getHours()-start.getHours());
+            // console.log((total*24)+(end.getHours()-start.getHours()));
+        },
+        loadAccident(){
+            DashService.getAccident().then((res) => {
+                if (res.data.code == 200) {
+                    const datas = res.data.data;
+                    this.last_acident.jml = datas[0].jumlah_korban;
+                    this.last_acident.ket = datas[0].keterangan_accident;
+                    this.last_acident.tgl = moment(datas[0].tgl_accident).format('YYYY-MM-DD');
+                } else {
+                    this.last_acident.jml = '0';
+                    this.last_acident.ket = '';
+                    this.last_acident.tgl = '';
+                }
+            }).catch((err) => {
+                console.log(err);
+                this.last_acident.jml = '?';
+                this.last_acident.ket = '?';
+                this.last_acident.tgl = '';
+            });
+        },
+        loadSafe(){
+            const jenis = 'safe';
+            DashService.getTotal(jenis).then((res) => {
+                if (res.data.code == 200) {
+                    const datas = res.data.data;
+                    this.performance.safe_work = datas.jumlah_total;
+                } else {
+                    this.performance.safe_work = '0';
+                }
+            }).catch((err) => {
+                console.log(err);
+                this.performance.safe_work = '?';
+            });
+        },
+        loadManhours(){
+            const jenis = 'manhours';
+            DashService.getTotal(jenis).then((res) => {
+                if (res.data.code == 200) {
+                    const datas = res.data.data;
+                    this.performance.manhours_worked = datas.jumlah_total;
+                } else {
+                    this.performance.manhours_worked = '0';
+                }
+            }).catch((err) => {
+                console.log(err);
+                this.performance.manhours_worked = '?';
+            });
+        },
+        loadLastAccident(){
+
         }
     },
     created(){
         this.loadGambar()
         this.workProgram()
         this.loadPerformance()
+        this.loadSafe()
+        this.loadManhours()
+        this.loadAccident()
     },
     beforeMount() {
         this.timer = setInterval(this.setDateTime, 1000);
