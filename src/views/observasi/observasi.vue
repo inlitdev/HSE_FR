@@ -33,39 +33,22 @@
                             class="mt-2"
                             dense
                         >
+                            <template v-slot:[`item.status`]="{item}">
+                                <strong style="color:#9E9D24" v-if="item.status == 'Open'">{{item.status}}</strong>
+                                <strong style="color:#0277BD" v-else-if="item.status == 'On Progress'">{{item.status}}</strong>
+                                <strong style="color:#009688" v-else-if="item.status == 'Done'">{{item.status}}</strong>
+                                <strong style="color:#795548" v-else-if="item.status == 'Batal'">{{item.status}}</strong>
+                                <strong style="color:#C62828" v-else>{{item.status}}</strong>
+                            </template>
                             <template v-slot:[`item.actions`]="{item}">
-                                <v-menu
-                                bottom
-                                origin="center center"
-                                transition="scale-transition"
-                                >
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                        color="primary"
-                                        dark
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        small
-                                        outlined
-                                        >Aksi <v-icon right>mdi-menu-down</v-icon></v-btn>
-                                    </template>
-
-                                    <v-list>
-                                        <v-list-item link @click="editItem(item)">
-                                            <v-list-item-subtitle style="color:#F57F17;"><v-icon color="yellow darken-4" small left>mdi-pencil</v-icon> Edit</v-list-item-subtitle>
-                                        </v-list-item>
-                                        <v-list-item link @click="deleteItem(item)">
-                                            <v-list-item-subtitle style="color:#AD1457;"><v-icon color="pink darken-3" small left>mdi-delete</v-icon> Delete</v-list-item-subtitle>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
+                                <v-btn x-small fab text @click="detailsItem(item)" color="cyan"><v-icon>mdi-file-find</v-icon></v-btn>
+                                <v-btn x-small fab text @click="deleteItem(item)" color="red" v-show="item.status == 'Open'"><v-icon>mdi-close</v-icon></v-btn>
                             </template>
                         </v-data-table>
                     </v-container>
                 </v-card>
             </v-col>
         </v-row>
-
 
         <!-- Form Input Dialog -->
         <v-row justify="center">
@@ -176,6 +159,77 @@
             </v-dialog>
         </v-row>
 
+        <!-- Form Input Details -->
+        <v-row justify="center">
+            <v-dialog v-model="dialog2" max-width="1000px">
+                <v-card>
+                    <v-card-title>
+                        <span class="text-h5">{{titles}}</span> 
+                        <v-spacer></v-spacer>
+                        <v-btn small icon @click="dialog2 = false"><v-icon>mdi-close</v-icon></v-btn>
+                    </v-card-title>
+                    <v-card-text class="mt-3">
+                        <v-container>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-row>
+                                        <v-col cols="2"><strong><v-icon>mdi-calendar-clock</v-icon></strong></v-col>
+                                        <v-col cols="10">{{details.tanggal}} <span class="ml-3">{{details.jam}} WIB</span></v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="2"><strong><v-icon>mdi-google-maps</v-icon></strong></v-col>
+                                        <v-col cols="10">{{details.lokasi}}</v-col>
+                                    </v-row>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-row>
+                                        <v-col cols="4"><strong>Status</strong></v-col>
+                                        <v-col cols="8">: {{details.status}}</v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="4"><strong>Keterangan</strong></v-col>
+                                        <v-col cols="8">: {{details.keterangan}}</v-col>
+                                    </v-row>
+                                </v-col>
+                                <v-col cols="12">
+                                    <strong>Capture:</strong> <br>
+                                    <v-row class="mt-2">
+                                        <v-col 
+                                        cols="4"
+                                        class="mr-2"
+                                        v-for="(item) in details.file"
+                                        :key="item.src">
+                                            <img
+                                                elevation="20"
+                                                :src="item.src"
+                                                height="180"
+                                                >
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="4" class="text-center">
+                                    <span class="">PELAPOR</span><br>
+                                    <strong>{{details.user}}</strong>
+                                </v-col>
+                                <v-col cols="4" class="text-center" v-show="details.eksekutor != ''">
+                                    <span class="">PENANGGUNGJAWAB</span><br>
+                                    <strong>{{details.eksekutor}}</strong><br>
+                                    <span>HSSE</span>
+                                </v-col>
+                                <v-col cols="4" class="text-center" v-show="details.pic != '-'">
+                                    <span class="">PIC</span><br>
+                                    <strong>{{details.pic}}</strong><br>
+                                    <span>{{details.divisi}}</span>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-row>
+
         <!-- Delete Form Dialog -->
         <v-row justify="center">
             <v-dialog v-model="dialog1" max-width="400px">
@@ -185,7 +239,14 @@
                     </v-card-title>
                     <v-card-text class="mt-3">
                         <v-container>
-                            <span>Apakah anda ingin menghapus <strong>{{statment}}</strong> ?</span>
+                            <span>Apakah anda ingin membatalkan temuan observasi ID <strong>{{statment}}</strong> ?</span>
+                            <v-textarea
+                            label="Keterangan Observasi"
+                            auto-grow
+                            rows="3"
+                            prepend-inner-icon="mdi-format-list-text"
+                            v-model="formInput.keterangan"
+                            ></v-textarea>
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
@@ -253,12 +314,26 @@ export default {
                 file:[],
                 keterangan:'',
             },
+            details:{
+                id:'',
+                tanggal:'',
+                jam:'',
+                lokasi:'',
+                user:'',
+                pic:'',
+                divisi:'',
+                status:'',
+                eksekutor:'',
+                keterangan:'',
+                file:[]
+            },
             list_observasi:[],
             list_lokasi:[],
             detail_observation:'',
             menus:false,
             dialog:false,
             dialog1:false,
+            dialog2:false,
             titles:'',
             required:'',
             typeSubmit:'',
@@ -281,9 +356,32 @@ export default {
                     {text:'Tanggal', value:'tgl'},
                     {text:'Observation', value:'list'},
                     {text:'Jam', value:'jam'},
-                    {text:'Status', value:'status'},
+                    {text:'Status', align:'center', value:'status'},
                     {text:'#', align:'center', value:'actions'}
                 ];
+                ObservationService.getMyObservation().then((res) => {
+                    const load = [];
+                    if (res.data.code == 200) {
+                        const datas = res.data.mengajukan;
+                        for (let i = 0; i < datas.length; i++) {
+                            load[i] = {
+                                id: datas[i].no_tiket,
+                                list: datas[i].nama_categories,
+                                tgl: moment(datas[i].tgl_observations).format('YYYY-MM-DD'),
+                                jam: datas[i].jam_observations,
+                                status: datas[i].info_observations
+                            }
+                        }
+                    } else {
+                        load[0] = {
+                            id: null,
+                            list: null,
+                        }
+                    }
+                    this.desserts = load;
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
             addItem(){
                 this.typeSubmit = 'add';
@@ -308,11 +406,62 @@ export default {
                 this.loadKategori();
                 this.loadLokasi();
             },
-            deleteItem(){
+            deleteItem(item){
                 this.typeSubmit = 'delete';
                 this.dialog1 = true;
-                this.titles = 'Delete Observasi';
-                this.statment = 'Data';
+                this.titles = 'Reject Observasi';
+                this.statment = item.id;
+                this.formInput.id = item.id;
+                this.formInput.keterangan = '';
+            },
+            detailsItem(item){
+                this.dialog2 = true;
+                this.titles = "Detail Data - "+item.id;
+                ObservationService.getObservationByID(item.id).then((res) => {
+                    if (res.data.code == 200) {
+                        const datas = res.data.mengajukan;
+                        const data2 = res.data.log;
+                        let pelaku;
+                        if (data2 == null) {
+                            pelaku = '';
+                        } else {
+                            pelaku = data2.nama_user;
+                        }
+                        this.details = {
+                            id: datas.no_tiket,
+                            tanggal: moment(datas.tgl_observations).format('YYYY-MM-DD'),
+                            jam: datas.jam_observations,
+                            lokasi: datas.lokasi,
+                            user: datas.nama_user,
+                            status: datas.info_observations,
+                            pic: datas.pic,
+                            eksekutor: pelaku,
+                            divisi:datas.divisi,
+                            keterangan: datas.keterangan_observations,
+                        }
+                        const foto = datas.foto_observations;
+                        const load = [];
+                        for (let i = 0; i < foto.length; i++) {
+                            load[i] = {
+                                src: foto[i]
+                            };
+                        }
+                        this.details.file = load;
+                        console.log(this.details.file);
+                    } else {
+                        this.dialog2 = false;
+                        this.snackbar = true;
+                        this.Messages.color = 'warning';
+                        this.Messages.icon = 'fas fa-exclamation-triangle';
+                        this.Messages.statment = 'Proses gagal !';
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                    this.snackbar = true;
+                    this.Messages.color = 'error';
+                    this.Messages.icon = 'fas fa-info';
+                    this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                });
             },
             reset(){
                 this.formInput = {
@@ -333,18 +482,6 @@ export default {
                     formData.append('lokasi_id', this.formInput.lokasi);
                     formData.append('user_id', this.user.id);
                     formData.append('keterangan_observations', this.formInput.keterangan);
-                    // let data =  {
-                    //     kategori_id: this.formInput.observasi,
-                    //     keterangan_observations: this.formInput.keterangan,
-                    //     jam_observations: this.formInput.jam,
-                    //     tgl_observations: this.formInput.tanggal,
-                    //     lokasi_id: this.formInput.lokasi,
-                    //     user_id: this.user.id,
-                    // }
-                    // data = JSON.stringify(data)
-                    // formData.append('data', data);
-                    console.log(formData);
-
                     ObservationService.PostObservation(formData).then((res) => {
                         if (res.data.code == 200) {
                             this.dataTable();
@@ -376,8 +513,35 @@ export default {
                         keterangan: this.formInput.keterangan,
                     }
                     console.log(data);
-                } else {
-                    console.log(this.formInput);
+                } else  {
+                    const data =  {
+                        keterangan_observations: this.formInput.keterangan,
+                    }
+                    ObservationService.rejectObservation(data,this.formInput.id).then((res) => {
+                        if (res.data.code == 200) {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'success';
+                            this.Messages.icon = 'fas fa-check';
+                            this.Messages.statment = 'Pembatalan data sukses !';
+                        } else {
+                            this.dataTable();
+                            this.snackbar = true;
+                            this.Messages.color = 'warning';
+                            this.Messages.icon = 'fas fa-exclamation-triangle';
+                            this.Messages.statment = 'Proses gagal !';
+                        }
+                        this.dialog1 = false;
+                    }).catch((err) => {
+                        console.log(err);
+                        this.snackbar = true;
+                        this.Messages.color = 'error';
+                        this.Messages.icon = 'fas fa-info';
+                        this.Messages.statment = 'Terjadi kesalahan sistem, silahkan hubungi tim IT !';
+                        this.dialog = false;
+                    });
+                    this.dialog1 = false;
+                    // console.log(data);
                 }
             },
             link(test){

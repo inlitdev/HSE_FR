@@ -52,7 +52,7 @@
                                     >
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field
-                                            v-model="last_acident.tgl"
+                                            v-model="input_acident.tgl"
                                             label="Date Accident"
                                             prepend-icon="mdi-calendar"
                                             readonly
@@ -61,7 +61,7 @@
                                             ></v-text-field>
                                         </template>
                                         <v-date-picker
-                                        v-model="last_acident.tgl"
+                                        v-model="input_acident.tgl"
                                         @input="menus = false"
                                         color="cyan"
                                         :max="today"
@@ -70,7 +70,7 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field
-                                    v-model="last_acident.jml"
+                                    v-model="input_acident.jml"
                                     type="number"
                                     prepend-inner-icon="mdi-skull"
                                     label="Jumlah Korban"
@@ -80,7 +80,7 @@
                                     <v-textarea
                                     label="Keterangan"
                                     auto-grow
-                                    v-model="last_acident.ket"
+                                    v-model="input_acident.ket"
                                     ></v-textarea>
                                 </v-col>
                             </v-row>

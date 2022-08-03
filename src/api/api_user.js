@@ -19,4 +19,9 @@ class UserService {
         return http.post('api/admin/user/delete/'+data);
     } 
 
+    // Logout
+    logout(){
+        return http.post('api/logout/');
+    }
+
 } export default new UserService();

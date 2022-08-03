@@ -41,7 +41,28 @@ class ObservationService {
     }
 
     // Observation
+    getMyObservation(){
+        return http.get('api/user/myobservations/index');
+    }
+    getObservationByID(id){
+        return http.get('api/admin/observations/index/'+id);
+    }
+    getAllObservation(){
+        return http.get('api/admin/observations/index/');
+    }
     PostObservation(data){
         return http_multipart.post('api/admin/observations/tambah/',data);
+    }
+    onprogressObservation(data,id){
+        return http.post('api/admin/observations/sedang_ditangani/'+id,data);
+    }
+    updateProgressObservation(data,id){
+        return http.post('api/admin/observations/pending/'+id,data);
+    }
+    doneObservation(data,id){
+        return http.post('api/admin/observations/close/'+id,data);
+    }
+    rejectObservation(data,id){
+        return http.post('api/admin/observations/batal/'+id,data);
     }
 } export default new ObservationService();

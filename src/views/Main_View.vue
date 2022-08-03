@@ -176,6 +176,10 @@
     </v-app>
 </template>
 <script>
+
+    // API Axios
+    import UserService from '@/api/api_user';
+
     export default {
         data: () => ({
             user: JSON.parse(localStorage.user),
@@ -216,6 +220,11 @@
                 this.$router.push({path:test});
             },
             logout(){
+                UserService.logout().then((res) => {
+                    console.log(res);
+                }).catch((err) => {
+                    console.log(err);
+                });
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 localStorage.removeItem('usertoken');
