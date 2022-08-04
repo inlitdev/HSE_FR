@@ -1,7 +1,8 @@
 //import axios from 'axios';
 
 // ----- server -----
-const api = 'http://192.168.1.225:6000/';
+// const api = 'http://192.168.1.225:6000/';
+const api = 'http://localhost:6000/';
 
 // ----- dev -----
 // const api = 'http://localhost:3021/';
